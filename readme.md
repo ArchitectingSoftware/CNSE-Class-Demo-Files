@@ -4,4 +4,4 @@ This repository will be used for in class demonstrations and to provide students
 
 Contents:
 
-1. Go Tutorial
+1. [Go Tutorial](./gotutorial/).  This directory contains a basic go language tutorial to get you ready for this class
