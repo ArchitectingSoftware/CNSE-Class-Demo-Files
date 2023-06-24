@@ -9,4 +9,6 @@ func main() {
 	RunArraySliceMapDemo()
 	RunLoopDemo()
 	RunFunctionsDemo()
+	RunBasicPointersDemo()
+	RunStructsDemo()
 }
