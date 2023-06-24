@@ -7,4 +7,6 @@ func main() {
 	RunTypesAndInterfacesDemo()
 	RunConstantsDemo()
 	RunArraySliceMapDemo()
+	RunLoopDemo()
+	RunFunctionsDemo()
 }
