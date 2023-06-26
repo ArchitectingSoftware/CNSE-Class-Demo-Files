@@ -13,5 +13,6 @@ func main() {
 	RunBasicPointersDemo()
 	RunStructsDemo()
 	RunObjectReceiverDemo()
+	RunErrorsDemo()
 	RunOopDemo()
 }
