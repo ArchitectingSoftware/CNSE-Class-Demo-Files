@@ -97,7 +97,7 @@ func oopDemo1() {
 		gpa: 3.5,
 	}
 
-	//note that this will call the individual getName method beacuse
+	//note that this will call the individual getName method because
 	//student does not override it
 	fmt.Println("Student getName()", s.getName())
 }

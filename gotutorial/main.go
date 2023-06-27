@@ -1,7 +1,6 @@
 package main
 
 func main() {
-
 	RunBasicIODemo()
 	RunConditionalDemo()
 	RunTypesAndInterfacesDemo()
@@ -15,4 +14,7 @@ func main() {
 	RunObjectReceiverDemo()
 	RunErrorsDemo()
 	RunOopDemo()
+	RunInterfaceDemo()
+	RunFileIODemo()
+	RunJsonDemo()
 }
