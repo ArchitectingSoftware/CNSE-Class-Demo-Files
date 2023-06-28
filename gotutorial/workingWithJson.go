@@ -113,6 +113,35 @@ func testAnnotatedJson() {
 	fmt.Println(string(jsonBytes))
 }
 
+func simpleJsonString() {
+	ToDoListItem := ToDoItem2{
+		Id:      4,
+		Title:   "Get Beer",
+		Details: "IPA",
+		IsDone:  false}
+
+	//Lets convert our structure to a JSON string
+	jsonBytes, err := json.MarshalIndent(ToDoListItem, "", "  ")
+	if err != nil {
+		fmt.Println(err)
+	}
+	jsonString := string(jsonBytes)
+
+	//Lets print the JSON
+	fmt.Println("Lets see that we have a starting string")
+	fmt.Println(jsonString)
+
+	//Now lets convert it back to a struct
+	var myToDoItem ToDoItem2
+	err = json.Unmarshal([]byte(jsonString), &myToDoItem)
+	if err != nil {
+		fmt.Println(err)
+	}
+	//Lets print the struct and make sure all is OK
+	fmt.Println(myToDoItem)
+
+}
+
 func testFromJsonString() {
 	//Lets populate our slice, its a global so if its already populated
 	//by another test we can ignore

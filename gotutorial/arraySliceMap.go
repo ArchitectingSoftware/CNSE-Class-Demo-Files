@@ -117,6 +117,57 @@ func aboutMaps() {
 	fmt.Printf("z: %v\n", z)
 }
 
+func loopingOverMapsDemo() {
+	x := make(map[string]int) //this makes a map
+	x["key"] = 10
+	x["key2"] = 20
+	x["key3"] = 30
+	x["key4"] = 40
+
+	//you can loop over a map using the range keyword
+	//note that the order of the keys is not guaranteed
+	for key, value := range x {
+		fmt.Printf("key: %v, value: %v\n", key, value)
+	}
+
+	//you can also just get the keys
+	for key := range x {
+		fmt.Printf("key: %v\n", key)
+	}
+
+	//you can also just get the values
+	for _, value := range x {
+		fmt.Printf("value: %v\n", value)
+	}
+}
+
+func deleteFromMapDemo() {
+	x := make(map[string]int) //this makes a map
+	x["key"] = 10
+	x["key2"] = 20
+	x["key3"] = 30
+	x["key4"] = 40
+
+	//lets say we want to remove key2 from the map
+
+	//we should first make sure the key exists
+	if _, ok := x["key2"]; ok {
+		fmt.Printf("key2 exists in the map\n")
+
+		//now we can delete it
+		delete(x, "key2")
+		fmt.Printf("x: %v\n", x)
+	} else {
+		fmt.Printf("key2 does not exist in the map\n")
+
+		//note that delete will not cause any harm if a key
+		//does not exist in the map, its basicaly a noop
+		//but its better to check first
+		delete(x, "key2")
+	}
+
+}
+
 func RunArraySliceMapDemo() {
 	fmt.Println("------ Running Array/Slice/Map Demo ------")
 	aboutArrays()
@@ -126,5 +177,7 @@ func RunArraySliceMapDemo() {
 	growingSlices()
 	indexingSlices()
 	aboutMaps()
+	loopingOverMapsDemo()
+	deleteFromMapDemo()
 	fmt.Printf("-----------------------------------\n\n")
 }
