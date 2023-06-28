@@ -39,4 +39,28 @@ Note that there are also some `TODO:` items marked as extra credit. **You do not
 
 Remember from our first lecture that you will only have one repo this entire term for many different deliverables.  Please place your solution under the `/todo` directory in your repo
 
+To make your life easier I also am providing a makefile to automate a lot of the common commands your will be using.  You can thank me later.
+
+In most of the other assignments I will also be requiring you to create a readme file in markdown and will ask for specific information about how to
+use your code.
+
+There is no need to do that with this assignment, as the command line options are fixed based on the scaffold that I provided.  Thus the command line options for this CLI should be (and should not be changed by you):
+
+```
+todo git:(main) ✗ ./todo -h
+Usage of ./todo:
+  -a string
+        Add an item to the database
+  -d int
+        Delete an item from the database
+  -db string
+        Name of the database file (default "./data/todo.json")
+  -l    List all the items in the database
+  -q int
+        Query an item in the database
+  -s    Change item 'done' status to true or false
+  -u string
+        Update an item in the database
+  ```
+
 
