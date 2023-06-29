@@ -12,6 +12,7 @@ func main() {
 	RunBasicPointersDemo()
 	RunStructsDemo()
 	RunObjectReceiverDemo()
+	RunPackagesDemo()
 	RunErrorsDemo()
 	RunOopDemo()
 	RunInterfaceDemo()
