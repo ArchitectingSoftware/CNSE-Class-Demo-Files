@@ -1,42 +1,38 @@
-## ToDo App
+## ToDo API Demo
 
-This is the class assignment for the ToDo list CLI assignment.
-**READ THIS CAREFULLY AS THESE ARE THE DIRECTIONS**
+This is a demo application showing many aspects of how to use the Golang Gin
+framework to create an API.
 
-Most cloud native applications are packaged as server side code, and operated on with command line interface (CLI) tools.   For our first programming assignment we are going to implement a go language CLI tool to manage a list of todo items.
+It keeps `todo` items in memory for this demo.  The makefile allows you to 
+exercise the API.  For example you can load the database, query by item,
+and so on.
 
-This application will be driven by a simple text file based database.  See the `todo.json` file.  Notice that this file is structured as a JSON array, with collections of individual JSON objects.  Each object contains an `id`, `description` and a `done` flag.  For example:
-
-```
-[
-  {
-    "id": 1,
-    "title": "Learn Go / GoLang",
-    "done": false
-  },
-  {
-    "id": 2,
-    "title": "Learn Kubernetes",
-    "done": false
-  }
-]
-```
-By default our program uses `./data/todo.json` as the default database.  You can override the database name from the command line via the `-db` flag providing a new database name.  For example `-db ./data/my_new_database.db`.  More on that later. 
-
-### What you need to do
-
-Carefully study the provided code.  Its a helpful scaffold. The code should run as is, albeit it does not do very much.  Within the code you will see a number of comments that look like:
+To see everything you can do you can just run `make` and get help.  See below.  Also notice that some of the make targets take parameters.  To do this you add a key=value on the `make` command line.  For example, to get a `todo` with an id of `2`. you run `make id=2 get-by-id`
 
 ```
-// TODO: <What you need to do>
+➜  todo-api git:(main) make
+Usage make <TARGET>
+
+  Targets:
+           build                        Build the todo executable
+           run                          Run the todo program from code
+           run-bin                      Run the todo executable
+           load-db                      Add sample data via curl
+           get-by-id                    Get a todo by id pass id=<id> on command line
+           get-all                      Get all todos
+           update-2                     Update record 2, pass a new title in using title=<title> on command line
+           delete-all                   Delete all todos
+           delete-by-id                 Delete a todo by id pass id=<id> on command line
+           get-v2                       Get all todos by done status pass done=<true|false> on command line
+           get-v2-all                   Get all todos using version 2
 ```
 
-Some of the `TODO:` prompts involve you writing comments to answer specific questions, others are prompts describing the code you are expected to develop.
+### Why use the gin framework?
 
-Answer all of the `TODO:` items and then upload your code to your GitHub/GitLab repository.  On blackboard, send me a link to your solution. 
+Many people in the golang community are opposed to using frameworks because the standard library provides robust function out-of-the-box.  However, the golang gin framework reduces a lot of the code you need to write and has a lot of nice features out of the box.  As far as I know its still the most popular and widely used API framework for go.
 
-Note that there are also some `TODO:` items marked as extra credit. **You do not have to do any of these items if you do not want any extra credit.  That said, I provided them less for you to get extra credit, and more for helping you to grasp a deeper understanding of go once you solve the basic assignment requirements**
+Online documentation for gin can be found here:
 
-Remember from our first lecture that you will only have one repo this entire term for many different deliverables.  Please place your solution under the `/todo` directory in your repo
-
-
+1. GitHub page: https://github.com/gin-gonic/gin
+2. Go Docs: https://pkg.go.dev/github.com/gin-gonic/gin?utm_source=godoc
+3. Gin homepage: https://gin-gonic.com/
