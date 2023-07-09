@@ -13,13 +13,15 @@ Although you can do all of these activities using the GCP console, which we will
 
 1. The first step requires you to use the GCP GUI Console.  Before we can use Terraform, we need to create a service account that will provide Terraform the permissions needed to create our infrastructure.  There are a number of steps in this process.  Detailed instructions are here:  [SETUP SERVICE ACCOUNT](setup-service-account.md).
 
-2. Now that you have created your service account, we need to protect the json file we just created.  It has a number of permissions, and you dont want somebody to accidently get access to this file.  A **VERY COMMON** mistake is that they get uploaded to GitHub by accident, and then hackers/crypto miners find them and can use resources in your cloud account that **WILL COST YOU MONEY**.  So before we forget lets create a `.gitignore` file and add the following contents (which also don't copy the terraform temp files):
+2. Now that you have created your service account, we need to protect the json file we just created.  It has a number of permissions, and you dont want somebody to accidently get access to this file.  A **VERY COMMON** mistake is that they get uploaded to GitHub by accident, and then hackers/crypto miners find them and can use resources in your cloud account that **WILL COST YOU MONEY**.  So before we forget lets create a `.gitignore` file and add the following contents (which also don't copy the terraform temporary and generated files that could contain sensitive information you dont want published to a public github repo):
 
 ```
 #Minimal .gitignore for Terraform and GCP Keys
 .terraform*
+terraform.tfvars 
 *.json
 .terraform/
+terraform.*
 ```
 3. Now that we have all of this setup. We can use Terraform to provision our infrastructure.  The 3 Terraform commands you will use are:
     - `terraform init`: This command ensure you have all of the plugins you need installed by terraform and that terraform is properly configured.
