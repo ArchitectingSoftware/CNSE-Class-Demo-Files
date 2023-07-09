@@ -16,6 +16,9 @@ help:
 	@echo "	   delete-by-id			Delete a todo by id pass id=<id> on command line"
 	@echo "	   get-v2				Get all todos by done status pass done=<true|false> on command line"
 	@echo "	   get-v2-all			Get all todos using version 2"
+	@echo "	   build-amd64-linux	Build amd64/Linux executable"
+	@echo "	   build-arm64-linux	Build arm64/Linux executable"
+
 
 
 
@@ -24,6 +27,15 @@ help:
 build:
 	go build .
 
+.PHONY: build-amd64-linux
+build-amd64-linux:
+	GOOS=linux GOARCH=amd64 go build -o ./todo-linux-amd64 .
+
+.PHONY: build-arm64-linux
+build-arm64-linux:
+	GOOS=linux GOARCH=arm64 go build -o ./todo-linux-arm64 .
+
+	
 .PHONY: run
 run:
 	go run main.go

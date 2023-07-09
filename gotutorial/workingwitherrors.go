@@ -158,6 +158,8 @@ func SimulateNetworkCall() error {
 func SimulateNetworkCall2Helper() error {
 	r := rand.Intn(3) //Generates a random number between 0 and 1
 
+	fmt.Printf("Random Number: %v\n", r)
+
 	switch r {
 	case 0:
 		return NewNetworkError(500, "Internal Server Error")
