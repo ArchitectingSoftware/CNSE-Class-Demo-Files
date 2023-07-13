@@ -146,14 +146,6 @@ func (td *ToDoAPI) GetToDo(c *gin.Context) {
 	c.JSON(http.StatusOK, todoItem)
 }
 
-// implementation for GET /crash
-// This simulates a crash to show some of the benefits of the
-// gin framework
-func (td *ToDoAPI) CrashSim(c *gin.Context) {
-	//panic() is go's version of throwing an exception
-	panic("Simulating an unexpected crash")
-}
-
 // implementation for POST /todo
 // adds a new todo
 func (td *ToDoAPI) AddToDo(c *gin.Context) {
@@ -230,4 +222,29 @@ func (td *ToDoAPI) DeleteAllToDo(c *gin.Context) {
 	}
 
 	c.Status(http.StatusOK)
+}
+
+/*   SPECIAL HANDLERS FOR DEMONSTRATION - CRASH SIMULATION AND HEALTH CHECK */
+
+// implementation for GET /crash
+// This simulates a crash to show some of the benefits of the
+// gin framework
+func (td *ToDoAPI) CrashSim(c *gin.Context) {
+	//panic() is go's version of throwing an exception
+	panic("Simulating an unexpected crash")
+}
+
+// implementation of GET /health. It is a good practice to build in a
+// health check for your API.  Below the results are just hard coded
+// but in a real API you can provide detailed information about the
+// health of your API with a Health Check
+func (td *ToDoAPI) HealthCheck(c *gin.Context) {
+	c.JSON(http.StatusOK,
+		gin.H{
+			"status":             "ok",
+			"version":            "1.0.0",
+			"uptime":             100,
+			"users_processed":    1000,
+			"errors_encountered": 10,
+		})
 }

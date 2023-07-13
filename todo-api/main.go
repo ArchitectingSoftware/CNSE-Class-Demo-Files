@@ -71,7 +71,9 @@ func main() {
 	r.DELETE("/todo", apiHandler.DeleteAllToDo)
 	r.DELETE("/todo/:id", apiHandler.DeleteToDo)
 	r.GET("/todo/:id", apiHandler.GetToDo)
+
 	r.GET("/crash", apiHandler.CrashSim)
+	r.GET("/health", apiHandler.HealthCheck)
 
 	//We will now show a common way to version an API and add a new
 	//version of an API handler under /v2.  This new API will support
