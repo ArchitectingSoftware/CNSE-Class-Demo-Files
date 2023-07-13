@@ -1,0 +1,2 @@
+serviceAccount:
+  keyFile: ./pulumi-credentials.json
