@@ -13,7 +13,7 @@ Although you can do all of these activities using the GCP console, which we will
 
 1. The first step requires you to use the GCP GUI Console.  Before we can use Terraform, we need to create a service account that will provide Terraform the permissions needed to create our infrastructure.  There are a number of steps in this process.  Detailed instructions are here:  [SETUP SERVICE ACCOUNT](setup-service-account.md).
 
-2. Now that you have created your service account, we need to protect the json file we just created.  It has a number of permissions, and you dont want somebody to accidently get access to this file.  A **VERY COMMON** mistake is that they get uploaded to GitHub by accident, and then hackers/crypto miners find them and can use resources in your cloud account that **WILL COST YOU MONEY**.  So before we forget lets create a `.gitignore` file and add the following contents (which also don't copy the terraform temporary and generated files that could contain sensitive information you dont want published to a public github repo):
+2. Now that you have created your service account, we need to protect the json file we just created.  It has a number of permissions, and you dont want somebody to accidently get access to this file.  A **VERY COMMON** mistake is that they get uploaded to GitHub by accident, and then hackers/crypto miners find them and can use resources in your cloud account that **WILL COST YOU MONEY**.  So before we forget lets create a `.gitignore` file and add the following contents (which also don't copy the terraform temporary and generated files that could contain sensitive information you don't want published to a public github repo):
 
 ```
 #Minimal .gitignore for Terraform and GCP Keys
@@ -22,12 +22,16 @@ terraform.tfvars
 *.json
 .terraform/
 terraform.*
+!terraform.tfvars
 ```
+Notice how the `.gitignore` file blocks all of the terraform generated files from finding their way into your repository.  The last line `!terraform.tfvars` is an override allowing that file to be checked into your repository as it does not have any sensitive information. 
+
 3. Now that we have all of this setup. We can use Terraform to provision our infrastructure.  The 3 Terraform commands you will use are:
     - `terraform init`: This command ensure you have all of the plugins you need installed by terraform and that terraform is properly configured.
     - `terraform plan`: This command will look at the current state of your cloud infrastructure (if it even exists), cross reference your terraform definition, and then figure out a plan for executing deltas to make your cloud infrastructure align to the terraform definition.
     - `terraform apply`: This command will apply your terraform configuration to the cloud provider.  If everything is successful it will automatically provision everything that you need.  If you need to make changes, you can just keep running `terraform apply` and it will figure out the difference and apply them.  Note that this command will ask you to approve before it makes any changes.  You can override this with `terraform apply -auto-approve`.  This will just run the terraform command and apply your changes without asking for permission.
     - `terraform destroy`:  This command will delete all of the resources in the cloud that it created.  Thus running `terraform destroy` followed by `terraform approve` will essentially reinstall everything for you.
+    - `terraform apply -refresh-only`:  Terraform keeps track of the expected state of your infrastructure in local files.  If somebody else modified your infrastructure, either through an automation tool or the console, or if you modified your infrastructure via the console, Terraform will be out of sync and will likely throw warnings or errors.  This command examines your terraform definition and probes your cloud resources to rebuild the state of your infrastructure.  It only rebuilds your local state, it does not make any changes. So if you get out of sync, you can run this command first and then do a `terraform apply`.
 4. One of the coolest features of terraform is that it not only will build your cloud infrastructure, it will also figure out the proper order to create and/or modify the cloud resources.  This could be a very complex task if done by hand. 
 
 Now that we have the process documented, we will next examine the purpose of each terraform file in this repo (with extension `.tf`) and the `terraform.tfvars` file.
