@@ -1,8 +1,9 @@
 ## Pulumi Automation
 
 ### Objectives
-Terraform is the industry leader in cloud automation.  Terraform is based on HCL, a 
-proprietary markup language.  In this demo we are going to be looking at Pulumi, that provisions infrastructure using standard programming languages such as Javascript, Typescript, Python, Go, .Net, etc.
+While Terraform is the industry leader in cloud automation.  Terraform is based on HCL, a proprietary markup language.  In this demo we are going to be looking at Pulumi, that provisions infrastructure using standard programming languages such as Javascript, Typescript, Python, Go, .Net, etc.
+
+Note that the directions below assume you have some familiarity with configuring some things directly in the GCP console.  The Terraform demonstration has a lot of documentation that assumes you do not know anything.  I highly recommend that you start with that demonstration first. 
 
 ### Directions
 
