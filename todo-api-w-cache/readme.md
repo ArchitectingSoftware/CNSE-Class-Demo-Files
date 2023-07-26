@@ -41,7 +41,7 @@ The _basic_ version simply copies your code into a base container that already h
 		 redisUrl = RedisDefaultLocation
 	 }
    return NewWithCacheInstance(redisUrl)
-  ```
+  
 
   What this code does is that it first checks to see if the `REDIS_URL` environment varaible is set, if so it sets a local variable `redisUrl` to this value.  The `if` statement handles the case where its not set and then sets the `redisUrl` value to the default discussed above.  The actual connection to redis is handled in the `NewWithCachInstance(redisUrl)` function. This function requires the URL of where redis is actually running. 
 
