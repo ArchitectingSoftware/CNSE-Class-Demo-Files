@@ -1,0 +1,24 @@
+# syntax=docker/dockerfile:1
+
+FROM golang:1.20
+
+# Set destination for COPY
+WORKDIR /app
+
+# Copy files
+COPY . .
+
+#download dependencies
+RUN go mod download
+
+# Build
+RUN CGO_ENABLED=0 GOOS=linux go build -o /todo-api
+
+# Expose port
+EXPOSE 1080
+
+#set env variables
+ENV REDIS_URL=host.docker.internal:6379
+
+# Run
+CMD ["/todo-api"]

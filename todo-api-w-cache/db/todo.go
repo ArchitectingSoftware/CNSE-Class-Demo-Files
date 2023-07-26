@@ -6,10 +6,10 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"os"
 
 	"github.com/go-redis/redis/v8"
 	"github.com/nitishm/go-rejson/v4"
-	//goredis "github.com/redis/go-redis/v9"
 )
 
 // ToDoItem is the struct that represents a single ToDo item
@@ -21,7 +21,7 @@ type ToDoItem struct {
 
 const (
 	RedisNilError        = "redis: nil"
-	RedisDefaultLocation = "localhost:6379"
+	RedisDefaultLocation = "0.0.0.0:6379"
 	RedisKeyPrefix       = "todo:"
 )
 
@@ -44,7 +44,14 @@ type ToDo struct {
 // ToDo struct.  If this is called it uses the default Redis URL
 // with the companion constructor NewWithCacheInstance.
 func New() (*ToDo, error) {
-	return NewWithCacheInstance(RedisDefaultLocation)
+	//We will use an override if the REDIS_URL is provided as an environment
+	//variable, which is the preferred way to wire up a docker container
+	redisUrl := os.Getenv("REDIS_URL")
+	//This handles the default condition
+	if redisUrl == "" {
+		redisUrl = RedisDefaultLocation
+	}
+	return NewWithCacheInstance(redisUrl)
 }
 
 // NewWithCacheInstance is a constructor function that returns a pointer to a new

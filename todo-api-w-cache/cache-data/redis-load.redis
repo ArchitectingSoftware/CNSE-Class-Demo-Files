@@ -1,5 +1,0 @@
-flushdb
-json.set todo:1 $ '{"id": 1,"title": "Learn Cloud Platforms","done": false}'
-json.set todo:2 $ '{"id": 2,"title": "Learn APIs","done": false}'
-json.set todo:3 $ '{"id": 3,"title": "Learn GoLang","done": false}'
-json.set todo:4 $ '{"id": 4,"title": "Learn Cloud Engineering","done": false}'

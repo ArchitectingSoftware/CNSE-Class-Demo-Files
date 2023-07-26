@@ -5,9 +5,10 @@ This is an extension of the todo API that persists todo data in a Redis cache.  
 1. Extend our reference API to integrate with a popular cloud-native cache called redis.
 2. Gain experience using a service, redis in this case, that is packaged and deployed in a docker container.
 
-Installing Redis
 Installing Redis GoLang Client `go get github.com/redis/go-redis/v8`
 Installing Redis JSON Extension for GoLang `go get github.com/nitishm/go-rejson/v4`
+
+**IMPORTANT:  REDIS MUST BE RUNNING AND AVAILABLE ON ITS STANDARD PORT 6973 FOR THIS API TO WORK PROPERLY.  DIRECTIONS FOR HOW TO INSTALL AND RUN REDIS LOCALLY VIA A CONTAINER ARE AVAILABLE VIA THE [cache](./cache) DIRECTORY**
 
 
 
