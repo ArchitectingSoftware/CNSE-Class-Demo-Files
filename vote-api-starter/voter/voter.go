@@ -29,8 +29,23 @@ func NewVoter(id uint, fn, ln string) *Voter {
 	}
 }
 
+func NewSampleVoter() *Voter {
+	return &Voter{
+		VoterID:   1,
+		FirstName: "John",
+		LastName:  "Doe",
+		VoteHistory: []voterPoll{
+			{PollID: 1, VoteDate: time.Now()},
+		},
+	}
+}
+
 func (v *Voter) AddPoll(pollID uint) {
 	v.VoteHistory = append(v.VoteHistory, voterPoll{PollID: pollID, VoteDate: time.Now()})
+}
+
+func (v *Voter) AddPollWithTimeDetails(pollID uint, timeOfPoll time.Time) {
+	v.VoteHistory = append(v.VoteHistory, voterPoll{PollID: pollID, VoteDate: timeOfPoll})
 }
 
 func (v *Voter) ToJson() string {

@@ -15,18 +15,29 @@ func main() {
 	//b, _ := json.Marshal(v)
 	//fmt.Println(string(b))
 	vl := api.NewVoterApi()
-	vl.AddVoter(1, "John", "Doe")
-	vl.AddPoll(1, 1)
-	vl.AddPoll(1, 2)
-	vl.AddVoter(2, "Jane", "Doe")
-	vl.AddPoll(2, 1)
-	vl.AddPoll(2, 2)
 
-	fmt.Println("------------------------")
-	fmt.Println(vl.GetVoterJson(1))
-	fmt.Println("------------------------")
-	fmt.Println(vl.GetVoterJson(2))
-	fmt.Println("------------------------")
-	fmt.Println(vl.GetVoterListJson())
-	fmt.Println("------------------------")
+	//POST /voter with body of John Doe
+	vl.AddVoter(1, "John", "Doe")
+
+	//POST /voter/1/poll with body of a voter record only including the Poll information
+	vl.LetsSimulateAPostForAPoll(1)
+	fmt.Println()
+	vl.LetsSimulateAPostForAPoll(5)
+
+	/*
+		vl.AddVoter(1, "John", "Doe")
+		vl.AddPoll(1, 1)
+		vl.AddPoll(1, 2)
+		vl.AddVoter(2, "Jane", "Doe")
+		vl.AddPoll(2, 1)
+		vl.AddPoll(2, 2)
+
+		fmt.Println("------------------------")
+		fmt.Println(vl.GetVoterJson(1))
+		fmt.Println("------------------------")
+		fmt.Println(vl.GetVoterJson(2))
+		fmt.Println("------------------------")
+		fmt.Println(vl.GetVoterListJson())
+		fmt.Println("------------------------")
+	*/
 }
