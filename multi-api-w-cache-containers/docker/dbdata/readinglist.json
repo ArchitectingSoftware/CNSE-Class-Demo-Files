@@ -1,0 +1,31 @@
+[
+    {
+        "id": 1,
+        "description": "Clustering Papers",
+        "items" : {
+            "JSC07":"/pubs/10",
+            "TSE":"/pubs/20",
+            "DREXEL06":"/pubs/30",
+            "GECCO04":"/pubs/40",
+            "IEESW":"/pubs/50",
+            "ICM03":"/pubs/60",
+            "GECCO03":"/pubs/70",
+            "SEKE02":"/pubs/80",
+            "GECCO02":"/pubs/90",
+            "ICSM01":"/pubs/100",
+            "WCRE01":"/pubs/110",
+            "WICSA01":"/pubs/120",
+            "ICSM99":"/pubs/130",
+            "STEP99":"/pubs/140",
+            "IWPC98":"/pubs/150"
+        }
+    },
+    {
+        "id": 2,
+        "description": "Cloud Native Papers",
+        "items" : {
+            "CNSE23a":"/pubs/160",
+            "CNSE23b":"/pubs/170"
+        }
+    }
+]

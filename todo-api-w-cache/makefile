@@ -56,8 +56,8 @@ restore-db-windows:
 load-db:
 	curl -d '{ "id": 1, "title": "Learn Go / GoLang", "done": false }' -H "Content-Type: application/json" -X POST http://localhost:1080/todo 
 	curl -d '{ "id": 2, "title": "Learn Kubernetes", "done": true}' -H "Content-Type: application/json" -X POST http://localhost:1080/todo 
-	curl -d '{ "id": 3, "title": "Learn Cloud Native Architecture","done": false}' -H "Content-Type: application/json" -X POST http://localhost:1080/todo 
-	curl -d '{"id": 4,"title": "Learn Why Professor Mitchell is the BEST! :-)","done": true}' -H "Content-Type: application/json" -X POST http://localhost:1080/todo
+	curl -d '{ "id": 3, "title": "Learn Cloud Native Architecturecurl -d '{"id": 4,"title": "Learn Why Professor Mitchell is the BEST! :-)","done": true}' -H "Content-Type: application/json" -X POST http://localhost:1080/todo","done": false}' -H "Content-Type: application/json" -X POST http://localhost:1080/todo 
+	
 
 .PHONY: update-2
 update-2:

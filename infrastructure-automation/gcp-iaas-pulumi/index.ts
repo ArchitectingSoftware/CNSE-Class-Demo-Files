@@ -18,7 +18,7 @@ const bucket = new gcp.storage.Bucket("cst680-class-bucket", {
 const object = new gcp.storage.BucketObject("to-do-api", {
     bucket: bucket.name,
     name: "todo-linux-amd64",  // Destination file name in the bucket
-    source: new pulumi.asset.FileAsset("../todo-api/todo-linux-amd64"), // Local file path
+    source: new pulumi.asset.FileAsset("../../todo-api/todo-linux-amd64"), // Local file path
 });
 
 //NETWORK - SETUP THE NETWORK for our VM
