@@ -1,0 +1,51 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: publist-api-svc
+  labels:
+    app: publist-api
+  namespace: cnse
+spec:
+  ports:
+    - port: 3080
+  selector:
+    app: publist-api
+    tier: frontend
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: publist-api
+  labels:
+    app: publist-api
+  namespace: cnse
+spec:
+  selector:
+    matchLabels:
+      app: publist-api
+      tier: frontend
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: publist-api
+        tier: frontend
+      namespace: cnse
+    spec:
+      hostname: publist
+      containers:
+      - image: architectingsoftware/cnse-publist-api:v1
+        name: publist-api
+        env:
+         - name: RLAPI_CACHE_URL
+           value: api-cache-svc:6379
+         - name: RLAPI_PUB_API_URL
+           value: http://pub-api-svc:2080 
+        ports:
+        - containerPort: 3080
+          name: publist-api
+        resources:
+            limits:
+              cpu: '500m'
+              memory: '100Mi'

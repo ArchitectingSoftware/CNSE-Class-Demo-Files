@@ -1,0 +1,43 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: cnse-ingress
+  #annotations:
+    #nginx.ingress.kubernetes.io/rewrite-target: /$1$2
+  namespace: cnse
+spec:
+  rules:
+  - host: api.localdev.me
+    http:
+      paths:
+      - pathType: Prefix
+        path: /pubs
+        backend:
+          service:
+            name:  pub-api-svc
+            port:
+              number: 2080
+      - pathType: Prefix
+        path: /publists
+        backend:
+          service:
+            name:  publist-api-svc
+            port:
+              number: 3080
+  # - http:
+  #     paths:
+  #     - pathType: ImplementationSpecific
+  #       path: /redis(/|$)(.*)
+  #       backend:
+  #         service:
+  #           name:  api-cache-svc
+  #           port:
+  #             number: 8001
+  #     - pathType: ImplementationSpecific
+  #       path: /pub/api(/|$)(.*)
+  #       backend:
+  #         service:
+  #           name: pub-api-svc
+  #           port:
+  #             number: 2080
+ 

@@ -1,0 +1,59 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-insight-svc
+  labels:
+    app: redis-insight
+  namespace: cnse
+spec:
+  ports:
+    - port: 8001
+      targetPort: 8001
+      protocol: TCP
+  selector:
+    app: redis-insight
+    tier: frontend
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-insight
+  labels:
+    app: redis-insight
+  namespace: cnse
+spec:
+  selector:
+    matchLabels:
+      app: redis-insight
+      tier: frontend
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: redis-insight
+        tier: frontend
+      namespace: cnse
+    spec:
+      containers:
+      - image: redislabs/redisinsight:latest
+        name: redis-insight
+        env:
+        - name: "RIPROXYPATH"
+          value: "/redis/"
+        - name: "RIPROXYENABLE"
+          value: "t"
+        ports:
+        - containerPort: 8001
+          protocol: TCP
+        volumeMounts:
+        - name: db
+          mountPath: /db
+        resources:
+            limits:
+              cpu: '750m'
+              memory: '500Mi'
+
+      volumes:
+      - name: db
+        emptyDir: {}

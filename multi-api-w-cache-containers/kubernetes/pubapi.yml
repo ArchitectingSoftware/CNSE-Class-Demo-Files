@@ -1,0 +1,49 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: pub-api-svc
+  labels:
+    app: pub-api
+  namespace: cnse
+spec:
+  ports:
+    - port: 2080
+  selector:
+    app: pub-api
+    tier: frontend
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pub-api
+  labels:
+    app: pub-api
+  namespace: cnse
+spec:
+  selector:
+    matchLabels:
+      app: pub-api
+      tier: frontend
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: pub-api
+        tier: frontend
+      namespace: cnse
+    spec:
+      hostname: pub
+      containers:
+      - image: architectingsoftware/cnse-pub-api:v1
+        name: pub-api
+        env:
+         - name: PUBAPI_CACHE_URL
+           value: api-cache-svc:6379
+        ports:
+        - containerPort: 2080
+          name: pub-api
+        resources:
+            limits:
+              cpu: '500m'
+              memory: '100Mi'
