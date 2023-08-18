@@ -13,6 +13,7 @@ services:
       - REDIS_ARGS=--appendonly yes
     networks:
       - backend
+      - frontend
   todo-api:
     image: todo-api-basic:v3
     container_name: todo-api-1

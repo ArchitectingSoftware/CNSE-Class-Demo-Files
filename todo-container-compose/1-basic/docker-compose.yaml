@@ -5,13 +5,13 @@ services:
     container_name: todo-cache
     restart: always
     ports:
-      - '6379:6379'
-      - '8001:8001'
+      - 6379:6379
+      - 8001:8001
   todo-api:
-    image: todo-api-basic:v3
+    image: todo-api-basic:v2
     container_name: todo-api-1
     restart: always
     ports:
-      - '1080:1080'
+      - 1080:1080
     depends_on:
       - cache
