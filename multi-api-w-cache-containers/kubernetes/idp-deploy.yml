@@ -1,0 +1,51 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: idp-svc
+  labels:
+    app: idp
+  namespace: cnse
+spec:
+  ports:
+    - port: 1234
+  selector:
+    app: idp
+    tier: frontend
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: idp
+  labels:
+    app: idp
+  namespace: cnse
+spec:
+  selector:
+    matchLabels:
+      app: idp
+      tier: frontend
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: idp
+        tier: frontend
+      namespace: cnse
+    spec:
+      hostname: idp-svc
+      containers:
+      - image: architectingsoftware/cnse-idp:v3
+        name: idp
+        env:
+         - name: IDP_HOST
+           value: idp-svc
+         - name: IDP_PORT
+           value: '1234'
+        ports:
+        - containerPort: 1234
+          name: idp
+        resources:
+            limits:
+              cpu: '500m'
+              memory: '100Mi'
