@@ -13,6 +13,7 @@ import (
 // application
 var (
 	dbFileNameFlag string
+	restoreDbFlag  bool
 	listFlag       bool
 	itemStatusFlag bool
 	queryFlag      int
@@ -29,6 +30,7 @@ type AppOptType int
 // flags effectively
 const (
 	LIST_DB_ITEM AppOptType = iota
+	RESTORE_DB_ITEM
 	QUERY_DB_ITEM
 	ADD_DB_ITEM
 	UPDATE_DB_ITEM
@@ -58,7 +60,7 @@ const (
 //	 YOUR ANSWER: <GOES HERE>
 func processCmdLineFlags() (AppOptType, error) {
 	flag.StringVar(&dbFileNameFlag, "db", "./data/todo.json", "Name of the database file")
-
+	flag.BoolVar(&restoreDbFlag, "restore", false, "Restore the database from the backup file")
 	flag.BoolVar(&listFlag, "l", false, "List all the items in the database")
 	flag.IntVar(&queryFlag, "q", 0, "Query an item in the database")
 	flag.StringVar(&addFlag, "a", "", "Add an item to the database")
@@ -82,6 +84,8 @@ func processCmdLineFlags() (AppOptType, error) {
 		switch f.Name {
 		case "l":
 			appOpt = LIST_DB_ITEM
+		case "restore":
+			appOpt = RESTORE_DB_ITEM
 		case "q":
 			appOpt = QUERY_DB_ITEM
 		case "a":
@@ -142,6 +146,13 @@ func main() {
 	//Switch over the command line flags and call the appropriate
 	//function in the db package
 	switch opts {
+	case RESTORE_DB_ITEM:
+		fmt.Println("Running RESTORE_DB_ITEM...")
+		if err := todo.RestoreDB(); err != nil {
+			fmt.Println("Error: ", err)
+			break
+		}
+		fmt.Println("Database restored from backup file")
 	case LIST_DB_ITEM:
 		fmt.Println("Running QUERY_DB_ITEM...")
 		todoList, err := todo.GetAllItems()

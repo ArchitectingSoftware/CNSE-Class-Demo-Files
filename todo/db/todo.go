@@ -64,6 +64,50 @@ func New(dbFile string) (*ToDo, error) {
 	return toDo, nil
 }
 
+// RestoreDB copies the backup file to the db file. This is useful for testing
+// as we restore the database to a known state before running tests - or if we
+// mess up.  In the source code I provided there is a /data directory.  In that
+// directory there is a todo.json.bak file.  By default your program expects the
+// database file to be named todo.json.
+//
+// This function should copy the todo.json.bak file to todo.json.  This will
+// restore the database to a known state.
+//
+// Precondition:  The backup file named todo.json.bak must exist in the
+// ./data directory
+//
+// Postcondition: The backup file will be copied to a file named todo.json
+// in the ./data directory.  Note this should overwrite the
+// existing todo.json file if it exists, or create it if it
+// does not exist.
+func (t *ToDo) RestoreDB() error {
+	//Copy the backup file to the db file
+	dbFileName := t.dbFileName
+	backupFileName := t.dbFileName + ".bak"
+
+	//Copy the backup file to the db file
+	//HINT: research the os package, specifically the Open, Create, and Copy functions
+	//		the basic idea is to open the src file using the os.Open() function,
+	//		create the dst file using the os.Create() function, and then
+	//		copy the contents of the src file to the dst file using the os.Copy() function
+	//		NOTE: that both os.Open and os.Create will return you a file object
+	//			  of type *os.File.  In order to prevent any leaks it is best
+	//			  practice to ensure that you close these files before the function
+	//			  returns.  You do this by calling the Close() method on the file
+	//			  object.  The defer statement is a great way to ensure that this
+	//			  happens.  For example:
+	//
+	//				srcFile, err := os.Open(srcFileName)
+	//				//Handle error ...
+	//				defer srcFile.Close()
+
+	// TODO: Implement this function
+	fmt.Println("RestoreDB() is not implemented")
+	fmt.Println("DB File:", dbFileName)
+	fmt.Println("Backup DB File:", backupFileName)
+	return nil
+}
+
 //------------------------------------------------------------
 // THESE ARE THE PUBLIC FUNCTIONS THAT SUPPORT OUR TODO APP
 //------------------------------------------------------------

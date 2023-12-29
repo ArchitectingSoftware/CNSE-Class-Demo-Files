@@ -8,6 +8,8 @@ help:
 	@echo "	   build				Build the todo executable"
 	@echo "	   run					Run the todo program from code"
 	@echo "	   run-bin				Run the todo executable"
+	@echo "	   test					Run the tests"
+	@echo "	   test-verbose			Run the tests with verbose output"
 	@echo "	   restore-db			Restore the sample database (unix/mac)"
 	@echo "	   restore-db-windows	Restore the sample database (windows)"
 	@echo "	   add-sample			Add a sample row"
@@ -32,6 +34,14 @@ restore-db:
 .PHONY: restore-db-windows
 restore-db-windows:
 	(copy.\data\todo.json.bak .\data\todo.json)
+
+.PHONY: test
+test:
+	go test ./tests
+
+.PHONY: test-verbose
+test-verbose:
+	go test ./tests -v
 
 .PHONY: add-sample
 add-sample:
