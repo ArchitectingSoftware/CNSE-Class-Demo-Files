@@ -89,7 +89,7 @@ func (t *ToDo) RestoreDB() error {
 	//HINT: research the os package, specifically the Open, Create, and Copy functions
 	//		the basic idea is to open the src file using the os.Open() function,
 	//		create the dst file using the os.Create() function, and then
-	//		copy the contents of the src file to the dst file using the os.Copy() function
+	//		copy the contents of the src file to the dst file using the io.Copy() function
 	//		NOTE: that both os.Open and os.Create will return you a file object
 	//			  of type *os.File.  In order to prevent any leaks it is best
 	//			  practice to ensure that you close these files before the function
