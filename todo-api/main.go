@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"log"
 	"os"
 
 	"drexel.edu/todo/api"
@@ -87,5 +88,6 @@ func main() {
 	v2.Get("/todo", apiHandler.ListSelectTodos)
 
 	serverPath := fmt.Sprintf("%s:%d", hostFlag, portFlag)
+	log.Println("Starting server on ", serverPath)
 	app.Listen(serverPath)
 }
