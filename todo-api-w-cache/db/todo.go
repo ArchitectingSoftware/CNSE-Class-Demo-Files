@@ -8,8 +8,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/go-redis/redis/v8"
-	"github.com/nitishm/go-rejson/v4"
+	"github.com/redis/go-redis/v9"
 )
 
 // ToDoItem is the struct that represents a single ToDo item
@@ -26,9 +25,8 @@ const (
 )
 
 type cache struct {
-	cacheClient *redis.Client
-	jsonHelper  *rejson.Handler
-	context     context.Context
+	client  *redis.Client
+	context context.Context
 }
 
 // ToDo is the struct that represents the main object of our
@@ -67,7 +65,7 @@ func NewWithCacheInstance(location string) (*ToDo, error) {
 
 	//We use this context to coordinate betwen our go code and
 	//the redis operaitons
-	ctx := context.Background()
+	ctx := context.TODO()
 
 	//This is the reccomended way to ensure that our redis connection
 	//is working
@@ -77,21 +75,11 @@ func NewWithCacheInstance(location string) (*ToDo, error) {
 		return nil, err
 	}
 
-	//By default, redis manages keys and values, where the values
-	//are either strings, sets, maps, etc.  Redis has an extension
-	//module called ReJSON that allows us to store JSON objects
-	//however, we need a companion library in order to work with it
-	//Below we create an instance of the JSON helper and associate
-	//it with our redis connnection
-	jsonHelper := rejson.NewReJSONHandler()
-	jsonHelper.SetGoRedisClientWithContext(ctx, client)
-
 	//Return a pointer to a new ToDo struct
 	return &ToDo{
 		cache: cache{
-			cacheClient: client,
-			jsonHelper:  jsonHelper,
-			context:     ctx,
+			client:  client,
+			context: ctx,
 		},
 	}, nil
 }
@@ -112,27 +100,47 @@ func redisKeyFromId(id int) string {
 	return fmt.Sprintf("%s%d", RedisKeyPrefix, id)
 }
 
+// getAllKeys will return all keys in the database that match the prefix
+// used in this application - RedisKeyPrefix.  It will return a string slice
+// of all keys.  Used by GetAll and DeleteAll
+func (t *ToDo) getAllKeys() ([]string, error) {
+	key := fmt.Sprintf("%s*", RedisKeyPrefix)
+	return t.client.Keys(t.context, key).Result()
+}
+
+func fromJsonString(s string, item *ToDoItem) error {
+	err := json.Unmarshal([]byte(s), &item)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// upsertToDo will be used by insert and update, Redis only supports upserts
+// so we will check if an item exists before update, and if it does not exist
+// before insert
+func (t *ToDo) upsertToDo(item *ToDoItem) error {
+	log.Println("Adding new Id:", redisKeyFromId(item.Id))
+	return t.client.JSONSet(t.context, redisKeyFromId(item.Id), ".", item).Err()
+}
+
 // Helper to return a ToDoItem from redis provided a key
 func (t *ToDo) getItemFromRedis(key string, item *ToDoItem) error {
 
 	//Lets query redis for the item, note we can return parts of the
 	//json structure, the second parameter "." means return the entire
 	//json structure
-	itemObject, err := t.jsonHelper.JSONGet(key, ".")
+	itemJson, err := t.client.JSONGet(t.context, key, ".").Result()
 	if err != nil {
 		return err
 	}
 
-	//JSONGet returns an "any" object, or empty interface,
-	//we need to convert it to a byte array, which is the
-	//underlying type of the object, then we can unmarshal
-	//it into our ToDoItem struct
-	err = json.Unmarshal(itemObject.([]byte), item)
-	if err != nil {
-		return err
-	}
+	return fromJsonString(itemJson, item)
+}
 
-	return nil
+func (t *ToDo) doesKeyExist(id int) bool {
+	kc, _ := t.client.Exists(t.context, redisKeyFromId(id)).Result()
+	return kc > 0
 }
 
 //------------------------------------------------------------
@@ -152,23 +160,12 @@ func (t *ToDo) getItemFromRedis(key string, item *ToDoItem) error {
 //	 (1) The item will be added to the DB
 //		(2) The DB file will be saved with the item added
 //		(3) If there is an error, it will be returned
-func (t *ToDo) AddItem(item ToDoItem) error {
+func (t *ToDo) AddItem(item *ToDoItem) error {
 
-	//Before we add an item to the DB, lets make sure
-	//it does not exist, if it does, return an error
-	redisKey := redisKeyFromId(item.Id)
-	var existingItem ToDoItem
-	if err := t.getItemFromRedis(redisKey, &existingItem); err == nil {
-		return errors.New("item already exists")
+	if t.doesKeyExist(item.Id) {
+		return fmt.Errorf("ToDo item with id %d already exists", item.Id)
 	}
-
-	//Add item to database with JSON Set
-	if _, err := t.jsonHelper.JSONSet(redisKey, ".", item); err != nil {
-		return err
-	}
-
-	//If everything is ok, return nil for the error
-	return nil
+	return t.upsertToDo(item)
 }
 
 // DeleteItem accepts an item id and removes it from the DB.
@@ -185,38 +182,24 @@ func (t *ToDo) AddItem(item ToDoItem) error {
 //		(2) The DB file will be saved with the item removed
 //		(3) If there is an error, it will be returned
 func (t *ToDo) DeleteItem(id int) error {
-
-	pattern := redisKeyFromId(id)
-	numDeleted, err := t.cacheClient.Del(t.context, pattern).Result()
-	if err != nil {
-		return err
+	if !t.doesKeyExist(id) {
+		return fmt.Errorf("ToDo item with id %d does not exist", id)
 	}
-	if numDeleted == 0 {
-		return errors.New("attempted to delete non-existent item")
-	}
-
-	return nil
+	return t.client.Del(t.context, redisKeyFromId(id)).Err()
 }
 
 // DeleteAll removes all items from the DB.
 // It will be exposed via a DELETE /todo endpoint
-func (t *ToDo) DeleteAll() error {
-
-	pattern := RedisKeyPrefix + "*"
-	ks, _ := t.cacheClient.Keys(t.context, pattern).Result()
-	//Note delete can take a collection of keys.  In go we can
-	//expand a slice into individual arguments by using the ...
-	//operator
-	numDeleted, err := t.cacheClient.Del(t.context, ks...).Result()
+func (t *ToDo) DeleteAll() (int, error) {
+	keyList, err := t.getAllKeys()
 	if err != nil {
-		return err
+		return 0, err
 	}
 
-	if numDeleted != int64(len(ks)) {
-		return errors.New("one or more items could not be deleted")
-	}
-
-	return nil
+	//Notice how we can deconstruct the slice into a variadic argument
+	//for the Del function by using the ... operator
+	numDeleted, err := t.client.Del(t.context, keyList...).Result()
+	return int(numDeleted), err
 }
 
 // UpdateItem accepts a ToDoItem and updates it in the DB.
@@ -232,24 +215,11 @@ func (t *ToDo) DeleteAll() error {
 //	 (1) The item will be updated in the DB
 //		(2) The DB file will be saved with the item updated
 //		(3) If there is an error, it will be returned
-func (t *ToDo) UpdateItem(item ToDoItem) error {
-
-	//Before we add an item to the DB, lets make sure
-	//it does not exist, if it does, return an error
-	redisKey := redisKeyFromId(item.Id)
-	var existingItem ToDoItem
-	if err := t.getItemFromRedis(redisKey, &existingItem); err != nil {
-		return errors.New("item does not exist")
+func (t *ToDo) UpdateItem(item *ToDoItem) error {
+	if !t.doesKeyExist(item.Id) {
+		return fmt.Errorf("ToDo item with id %d does not exist", item.Id)
 	}
-
-	//Add item to database with JSON Set.  Note there is no update
-	//functionality, so we just overwrite the existing item
-	if _, err := t.jsonHelper.JSONSet(redisKey, ".", item); err != nil {
-		return err
-	}
-
-	//If everything is ok, return nil for the error
-	return nil
+	return t.upsertToDo(item)
 }
 
 // GetItem accepts an item id and returns the item from the DB.
@@ -266,19 +236,13 @@ func (t *ToDo) UpdateItem(item ToDoItem) error {
 //		(2) If there is an error, it will be returned
 //			along with an empty ToDoItem
 //		(3) The database file will not be modified
-func (t *ToDo) GetItem(id int) (ToDoItem, error) {
-
-	// Check if item exists before trying to get it
-	// this is a good practice, return an error if the
-	// item does not exist
-	var item ToDoItem
-	pattern := redisKeyFromId(id)
-	err := t.getItemFromRedis(pattern, &item)
+func (t *ToDo) GetItem(id int) (*ToDoItem, error) {
+	newToDo := &ToDoItem{}
+	err := t.getItemFromRedis(redisKeyFromId(id), newToDo)
 	if err != nil {
-		return ToDoItem{}, err
+		return nil, err
 	}
-
-	return item, nil
+	return newToDo, nil
 }
 
 // ChangeItemDoneStatus accepts an item id and a boolean status.
@@ -318,23 +282,22 @@ func (t *ToDo) ChangeItemDoneStatus(id int, value bool) error {
 //			along with an empty slice
 //		(3) The database file will not be modified
 func (t *ToDo) GetAllItems() ([]ToDoItem, error) {
+	keyList, err := t.getAllKeys()
+	if err != nil {
+		return nil, err
+	}
 
-	//Now that we have the DB loaded, lets crate a slice
-	var toDoList []ToDoItem
-	var toDoItem ToDoItem
+	//preallocate the slice, will make things faster
+	resList := make([]ToDoItem, len(keyList))
 
-	//Lets query redis for all of the items
-	pattern := RedisKeyPrefix + "*"
-	ks, _ := t.cacheClient.Keys(t.context, pattern).Result()
-	for _, key := range ks {
-		err := t.getItemFromRedis(key, &toDoItem)
+	for idx, k := range keyList {
+		err := t.getItemFromRedis(k, &resList[idx])
 		if err != nil {
 			return nil, err
 		}
-		toDoList = append(toDoList, toDoItem)
 	}
 
-	return toDoList, nil
+	return resList, nil
 }
 
 // PrintItem accepts a ToDoItem and prints it to the console

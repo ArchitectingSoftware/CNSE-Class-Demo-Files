@@ -69,6 +69,12 @@ func main() {
 		os.Exit(1)
 	}
 
+	//HTTP Standards for "REST" APIS
+	//GET - Read/Query
+	//POST - Create
+	//PUT - Update
+	//DELETE - Delete
+
 	app.Get("/todo", apiHandler.ListAllTodos)
 	app.Post("/todo", apiHandler.AddToDo)
 	app.Put("/todo", apiHandler.UpdateToDo)

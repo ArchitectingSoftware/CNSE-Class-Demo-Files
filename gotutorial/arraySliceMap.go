@@ -107,6 +107,9 @@ func aboutMaps() {
 
 	//of course you can also declare and initialize a map in one line
 	y := map[string]int{"key1": 10, "key2": 20}
+
+	y["comcast"] = 1000
+	y["drexel"] = 3000
 	fmt.Printf("y: %v\n", y)
 
 	//you can also make a map with make and a capacity, this might improve memory
@@ -151,19 +154,19 @@ func deleteFromMapDemo() {
 	//lets say we want to remove key2 from the map
 
 	//we should first make sure the key exists
-	if _, ok := x["key2"]; ok {
+	if _, ok := x["key6"]; ok {
 		fmt.Printf("key2 exists in the map\n")
 
 		//now we can delete it
 		delete(x, "key2")
 		fmt.Printf("x: %v\n", x)
 	} else {
-		fmt.Printf("key2 does not exist in the map\n")
+		fmt.Printf("key6 does not exist in the map\n")
 
 		//note that delete will not cause any harm if a key
 		//does not exist in the map, its basicaly a noop
 		//but its better to check first
-		delete(x, "key2")
+		delete(x, "key6")
 	}
 
 }

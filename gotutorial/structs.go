@@ -35,6 +35,7 @@ func createStructTest() {
 	//We can then access the fields of the struct using the dot operator
 	p3.name = "Fred"
 	p3.age = 40
+
 	fmt.Println(p3)
 }
 
@@ -95,10 +96,10 @@ func structAndPointerDemo() {
 // Go does not have official constructors this is the idiomatic way to create a new
 // person struct.  Notice the type is *person, this means that the function returns
 // a pointer to a person struct.
-func newPerson(name string) *person {
+func newPerson(firstName string) *person {
 	//You can safely return a pointer to a local variable as a local variable
 	//will survive the scope of the function
-	return &person{name: name}
+	return &person{name: firstName}
 }
 
 func newPersonTest() {

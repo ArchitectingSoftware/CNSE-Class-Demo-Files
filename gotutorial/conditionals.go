@@ -5,6 +5,7 @@ import "fmt"
 func basicConditionalIf() {
 	//Go has basic conditionals
 	var x int = 10
+
 	if x > 5 {
 		println("x is greater than 5")
 	} else {
@@ -41,7 +42,7 @@ func basicConditionalSwitch() {
 
 	//GO can also switch on types
 	//this is a type switch
-	var z interface{}
+	var z any
 	z = 1
 	switch z.(type) {
 	case int:

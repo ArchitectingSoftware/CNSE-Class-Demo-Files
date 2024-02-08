@@ -45,8 +45,9 @@ func rangeLoopTest() {
 	//compiler that you don't care about that value.
 	nums := []int{2, 3, 4}
 	sum := 0
-	for _, num := range nums {
+	for idx, num := range nums {
 		sum += num
+		fmt.Println("index:", idx)
 	}
 	fmt.Println("sum:", sum)
 

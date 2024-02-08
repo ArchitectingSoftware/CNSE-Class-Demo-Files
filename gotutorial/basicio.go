@@ -21,6 +21,7 @@ func writeToStdOutput() {
 	var classCode string
 	classCode = "CS999"
 	totalStudents := 30
+
 	fmt.Printf("I can also do C style printf: Class = %s NumStudents = %d\n",
 		classCode, totalStudents)
 }

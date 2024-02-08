@@ -3,11 +3,13 @@ package main
 import (
 	"flag"
 	"fmt"
+	"log"
 	"os"
 
 	"drexel.edu/todo/api"
-	"github.com/gin-contrib/cors"
-	"github.com/gin-gonic/gin"
+	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/gofiber/fiber/v2/middleware/recover"
 )
 
 // Global variables to hold the command line flags to drive the todo CLI
@@ -56,8 +58,10 @@ func processCmdLineFlags() {
 // requested operation
 func main() {
 	processCmdLineFlags()
-	r := gin.Default()
-	r.Use(cors.Default())
+
+	app := fiber.New()
+	app.Use(cors.New())
+	app.Use(recover.New())
 
 	apiHandler, err := api.New()
 	if err != nil {
@@ -65,22 +69,30 @@ func main() {
 		os.Exit(1)
 	}
 
-	r.GET("/todo", apiHandler.ListAllTodos)
-	r.POST("/todo", apiHandler.AddToDo)
-	r.PUT("/todo", apiHandler.UpdateToDo)
-	r.DELETE("/todo", apiHandler.DeleteAllToDo)
-	r.DELETE("/todo/:id", apiHandler.DeleteToDo)
-	r.GET("/todo/:id", apiHandler.GetToDo)
+	//HTTP Standards for "REST" APIS
+	//GET - Read/Query
+	//POST - Create
+	//PUT - Update
+	//DELETE - Delete
+	app.Get("/todo", apiHandler.ListAllTodos)
+	app.Post("/todo", apiHandler.AddToDo)
+	app.Put("/todo", apiHandler.UpdateToDo)
+	app.Delete("/todo", apiHandler.DeleteAllToDo)
+	app.Delete("/todo/:id<int>", apiHandler.DeleteToDo)
+	app.Get("/todo/:id<int>", apiHandler.GetToDo)
 
-	r.GET("/crash", apiHandler.CrashSim)
-	r.GET("/health", apiHandler.HealthCheck)
+	app.Get("/crash", apiHandler.CrashSim)
+	app.Get("/crash2", apiHandler.CrashSim2)
+	app.Get("/crash3", apiHandler.CrashSim3)
+	app.Get("/health", apiHandler.HealthCheck)
 
 	//We will now show a common way to version an API and add a new
 	//version of an API handler under /v2.  This new API will support
 	//a path parameter to search for todos based on a status
-	v2 := r.Group("/v2")
-	v2.GET("/todo", apiHandler.ListSelectTodos)
+	v2 := app.Group("/v2")
+	v2.Get("/todo", apiHandler.ListSelectTodos)
 
 	serverPath := fmt.Sprintf("%s:%d", hostFlag, portFlag)
-	r.Run(serverPath)
+	log.Println("Starting server on ", serverPath)
+	app.Listen(serverPath)
 }

@@ -1,15 +1,16 @@
 # syntax=docker/dockerfile:1
 
-FROM golang:1.20
+FROM golang:1.21
 
 # Set destination for COPY
 WORKDIR /app
 
+#download dependencies
+COPY go.mod go.sum ./
+RUN go mod download
+
 # Copy files
 COPY . .
-
-#download dependencies
-RUN go mod download
 
 # Build
 RUN CGO_ENABLED=0 GOOS=linux go build -o /todo-api

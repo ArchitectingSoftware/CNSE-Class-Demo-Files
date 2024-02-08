@@ -27,6 +27,7 @@ func basicPackageDemo() {
 	//unexported methods. Thus we cannot see the SSN of the student,
 	//or the tuition balance.  In order to operate on the unexported
 	//fields we need to use exported receiver methods.
+
 	fmt.Println("SSN:", s.GetSSN("secret"))
 	fmt.Println("Adjust Balance: ", "New Balance is:", s.AdjustBalance(100.0))
 
