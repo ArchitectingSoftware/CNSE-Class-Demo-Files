@@ -386,6 +386,8 @@ func (t *ToDo) loadDB() error {
 		return err
 	}
 
+	//Lets clear out the map and then reload it
+	clear(t.toDoMap)
 	//Now let's iterate over our slice and add each item to our map
 	for _, item := range toDoList {
 		t.toDoMap[item.Id] = item
