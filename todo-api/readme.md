@@ -1,6 +1,6 @@
 ## ToDo API Demo
 
-This is a demo application showing many aspects of how to use the Golang Gin
+This is a demo application showing many aspects of how to use the Golang Fiber
 framework to create an API.
 
 It keeps `todo` items in memory for this demo.  The makefile allows you to 
@@ -27,12 +27,12 @@ Usage make <TARGET>
            get-v2-all                   Get all todos using version 2
 ```
 
-### Why use the gin framework?
+### Why use the fiber framework?
 
-Many people in the golang community are opposed to using frameworks because the standard library provides robust function out-of-the-box.  However, the golang gin framework reduces a lot of the code you need to write and has a lot of nice features out of the box.  As far as I know its still the most popular and widely used API framework for go.
+Many people in the golang community are opposed to using frameworks because the standard library provides robust function out-of-the-box.  However, the golang fiber framework reduces a lot of the code you need to write and has a lot of nice features out of the box.  As far as I know its still the most popular and widely used API framework for go.
 
-Online documentation for gin can be found here:
+Online documentation for Fiber can be found here:
 
-1. GitHub page: https://github.com/gin-gonic/gin
-2. Go Docs: https://pkg.go.dev/github.com/gin-gonic/gin?utm_source=godoc
-3. Gin homepage: https://gin-gonic.com/
+1. GitHub page: https://github.com/gofiber/fiber
+2. Docs: https://docs.gofiber.io/
+3. Gin homepage: https://gofiber.io/
